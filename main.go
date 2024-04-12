@@ -5,6 +5,22 @@ import (
 	"strings"
 )
 
+var funcA = func(a string, b ...int) string {
+	counter := 0
+	for _, val := range b {
+		counter += val
+	}
+	return fmt.Sprintf("Word : %s\nNumber sum : %d\n", a, counter)
+}
+
+var funcMap = func(data []int, callback func(val int, index int) int) []int {
+	newVal := data[:]
+	for i, val := range newVal {
+		newVal[i] = callback(val, i)
+	}
+	return newVal
+}
+
 func main() {
 	// basic void function
 	printMessage("Hai", []string{"John", "Wick"})
@@ -25,8 +41,36 @@ func main() {
 	fmt.Println(createArray(sliceArr...))
 
 	// variadic function with array
+	// array must be converted into slice first
 	arr := [5]int64{2, 3, 4, 5, 12}
 	fmt.Println(createArray(arr[:]...))
+
+	// closure function
+	// assign function into variable so that the function doesn't have it's own name (anonymous)
+	// closure only able to be called if it located above the invoker
+	fmt.Println(funcA("Hello World", 12, 23, 20))
+
+	// usage of dynamic template string
+	var hurufA = "Huruf"
+	var angkaA = 23
+	var arrA = []int{2, 3, 4, 5}
+	fmt.Printf("Huruf : %v\nAngka : %v\nArray: %v\n", hurufA, angkaA, arrA)
+
+	// IIFE
+	func() {
+		fmt.Println("IIFE Invoked")
+	}()
+
+	// mapping function (Function as Arguments)
+	var toBeMap = []int{1, 2, 3, 4, 5, 6}
+	var resultMapped = funcMap(toBeMap, func(val, index int) int {
+		if val > 3 {
+			return val * 2
+		}
+		return val
+	})
+	fmt.Println(resultMapped)
+
 }
 func printMessage(message string, arr []string) {
 	nameString := fmt.Sprintf("Your message %s with %s", message, strings.Join(arr, " "))
